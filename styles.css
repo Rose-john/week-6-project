@@ -96,3 +96,12 @@ footer {
 
   color: rgba(39, 33, 66, 0.4);
 }
+#forecast {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.forecast-day {
+  text-align: center;
+}

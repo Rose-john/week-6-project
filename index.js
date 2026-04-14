@@ -15,6 +15,8 @@ function displayWeather(response) {
    document.querySelector("#current-date").innerHTML = formatDate(date);
   let iconElement = document.querySelector("#icon");
   iconElement.setAttribute("src", icon);
+
+  getForecast(response.data.coordinates);
 }
 
 function search(event) {
@@ -63,3 +65,37 @@ let currentDate = new Date();
 
 currentDateELement.innerHTML = formatDate(currentDate);
 
+function getForecast(coordinates) {
+  let apiKey = "b2a5adcct04b33178913oc335f405433";
+  let apiUrl = `https://api.shecodes.io/weather/v1/forecast?lon=${coordinates.longitude}&lat=${coordinates.latitude}&key=${apiKey}`;
+
+  axios.get(apiUrl).then(displayForecast);
+}
+
+function displayForecast(response) {
+  let forecast = response.data.daily;
+
+  let forecastHtml = "";
+
+  forecast.forEach(function (day, index) {
+    if (index < 5) {
+      forecastHtml =
+        forecastHtml +
+        `
+        <div class="forecast-day">
+          <p>${formatDay(day.time)}</p>
+          <img src="${day.condition.icon_url}" width="40" />
+          <p>${Math.round(day.temperature.maximum)}° / ${Math.round(day.temperature.minimum)}°</p>
+        </div>
+      `;
+    }
+  });
+
+  document.querySelector("#forecast").innerHTML = forecastHtml;
+}
+function formatDay(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  return days[date.getDay()];
+}
